@@ -26,7 +26,7 @@ class player:
         else:
             self._score -= points
 
-quiz = [
+questions = [
     {
         "question 1": "7 + 5?",
         "question 2": "9 x 4?",
@@ -98,18 +98,18 @@ def user_login():
 def quiz(user):
     user = user
     for i in range(1, 21):
-        print(quiz[0][f"question {i}"])
+        print(questions[0][f"question {i}"])
         answer = input("Your answer: ")
-        if answer.isdigit() and int(answer) == quiz[1][f"question {i}"]:
+        if answer.isdigit() and int(answer) == questions[1][f"question {i}"]:
             print("Correct!")
             user.add_points(5)
         else:
-            print(f"Incorrect! The correct answer was {quiz[1][f'question {i}']}.")
+            print(f"Incorrect! The correct answer was {questions[1][f'question {i}']}.")
             user.remove_points(2)
     return user.get_score()
 
 def display_leaderboard():
-   leaderboard = scores.sort(key=lambda x: x['score'], reverse=True)
+   leaderboard = sorted(scores, key=lambda x: x['score'], reverse=True)
    print("Leaderboard:")
    divider()
    for i, entry in enumerate(leaderboard):
