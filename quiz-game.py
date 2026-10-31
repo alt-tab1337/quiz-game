@@ -23,6 +23,8 @@ class player:
             return "Cannot remove no points."
         elif points < 0:
             return "Cannot remove negative points (did you mean to use add_points()?)"
+        elif self._score - points < 0:
+            self._score = 0
         else:
             self._score -= points
 
@@ -86,41 +88,44 @@ def user_login():
     while username is None:
         try:
             username = input("Please enter your username: ")
-            if username in scores:
-                print("Username already exists. Please choose a different username.")
-                continue
+            for entry in scores:
+                if entry['username'] == username:
+                    print("Username already exists. Please choose a different username.")
+                    continue
+            else: 
+                return player(username)
         except  ValueError:
-                print("Please enter a valid username.")
-    
-    user = player(username)
-    userin = True       
+            print("Please enter a valid username.")     
 
 def quiz(user):
     user = user
     for i in range(1, 21):
-        print(questions[0][f"question {i}"])
-        answer = input("Your answer: ")
-        if answer.isdigit() and int(answer) == questions[1][f"question {i}"]:
+        answered = False
+        while not answered:
+            print(questions[0][f"question {i}"])
+            try:
+                answer = int(input("Your answer: "))
+                answered = True
+            except ValueError:
+                print("Please enter a number!")
+        if answer == questions[1][f"question {i}"]:
             print("Correct!")
             user.add_points(5)
         else:
             print(f"Incorrect! The correct answer was {questions[1][f'question {i}']}.")
             user.remove_points(2)
-    return user.get_score()
+    return user.score()
 
 def display_leaderboard():
-   leaderboard = sorted(scores, key=lambda x: x['score'], reverse=True)
-   print("Leaderboard:")
-   divider()
-   for i, entry in enumerate(leaderboard):
-       for i in range (0, 21):
-              print(f"{i+1}. {entry['username']} - {entry['score']} points")
+    leaderboard = sorted(scores, key=lambda x: x['score'], reverse=True)
+    print("Leaderboard:")
+    divider()
+    for i, entry in enumerate(leaderboard [:20]):
+        print(f"{i+1}. {entry['username']} - {entry['score']} points")
 
-userin = False
-while not userin:
+user = None
+while user is None:
     user = user_login()
-    if user is not None:
-        userin = True
     
 
 quizbegun = False
