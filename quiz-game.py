@@ -86,7 +86,7 @@ def user_login():
     while username is None:
         try:
             username = input("Please enter your username: ")
-            if scores.find(username) != -1:
+            if username in scores:
                 print("Username already exists. Please choose a different username.")
                 continue
         except  ValueError:
